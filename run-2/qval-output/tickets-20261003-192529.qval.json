@@ -1,0 +1,6150 @@
+{
+  "meta": {
+    "app": "qval",
+    "appVersion": "0.2.0",
+    "createdAt": "2026-10-06T19:53:32.763Z",
+    "updatedAt": "2026-10-08T00:19:08.164Z",
+    "dataset": {
+      "fingerprint": "sha256:302da078df200007c90a3ca92ff9f562b9bbfca84d87e58e9a2587000300c47a",
+      "ticketCount": 250,
+      "source": {
+        "provider": "claude-skill",
+        "model": "Claude Code subagents"
+      }
+    },
+    "config": {
+      "fingerprint": "sha256:c0b5ad1a8c85313a60a1f7f4949476a1adbbde50009c714f6a9efedaccb76175",
+      "scorer": "jev",
+      "schema": [
+        {
+          "key": "issue",
+          "label": "Issue",
+          "type": "enum",
+          "description": "Issue is the kind of problem or request the customer raises. It is mandatory: pick the single strongest match. NOT_SUPPORT, NO_ISSUE and UNCLEAR are used only when nothing else applies.",
+          "options": [
+            "BUG",
+            "FEATURE_REQUEST",
+            "HOW_TO/DOCS",
+            "NOT_SUPPORT",
+            "SPAM",
+            "NO_ISSUE",
+            "UNCLEAR"
+          ],
+          "instructions": "Which issue type best describes the main problem or request the customer raises in this Q-DO support conversation?",
+          "optionDescriptions": {
+            "BUG": "Something that exists in Q-DO doesn't work as it should: data not saved, garbled or lost; wrong behavior; sync failures; crashes; installs or sign-ins that fail; a device that should be supported being refused. Also when the help says one thing and the product does another and it isn't clear which is wrong.",
+            "FEATURE_REQUEST": "The customer asks for something Q-DO doesn't do, even if they phrase it as a complaint (\"why can't I…\"). Includes asking Q-DO to support a device, OS or browser it doesn't support.",
+            "HOW_TO/DOCS": "The customer looked for help and the help center, FAQ or in-app guidance is missing, unclear, wrong, outdated or mistranslated, while the product itself works. Or the customer asks how to do something, asks whether a device is supported, or asks for advice on using Q-DO, with nothing broken.",
+            "NOT_SUPPORT": "Not a Q-DO support request: job applications, press or partnership requests, sales pitches, messages meant for a different company.",
+            "SPAM": "Not for this company, or clearly trying to sell a product or service that we don't need.",
+            "NO_ISSUE": "Thank-you notes or comments that ask for nothing.",
+            "UNCLEAR": "The message is too vague, empty or garbled to tell what the problem is, even if the customer names an area (e.g., \"something's wrong with sharing\"). Last resort only."
+          }
+        },
+        {
+          "key": "productArea",
+          "label": "Product-Area",
+          "type": "enum",
+          "description": "Product area is the part of Q-DO the customer's problem or request is about. It is optional: pick the strongest single match, or NONE when no area applies (for example NOT_SUPPORT, NO_ISSUE or UNCLEAR conversations). Problems between one person's own devices are SYNC; problems between different people on a shared list are SHARING.",
+          "options": [
+            "TASKS_LISTS",
+            "SYNC",
+            "SHARING",
+            "ARCHIVE_SEARCH_EXPORT",
+            "ACCOUNT",
+            "INTEGRATIONS",
+            "NONE"
+          ],
+          "instructions": "Which Q-DO product area does the customer's main problem or request concern?",
+          "optionDescriptions": {
+            "TASKS_LISTS": "Creating and editing tasks and lists on the customer's own account: task titles, notes, subtasks, priorities, due dates, recurring tasks, completion, reminders and notifications, list order, sorting, progress, pinning, organizing lists (folders, tags, templates, views).",
+            "SYNC": "Keeping one person's own devices in step: changes, checkmarks or lists that differ between devices, offline changes that don't upload, sync-conflict prompts.",
+            "SHARING": "Lists shared between different people: invites, members, roles and permissions, leaving a list, assigning tasks, seeing other members' changes, collisions between members' edits.",
+            "ARCHIVE_SEARCH_EXPORT": "Archiving and unarchiving lists, the archive view, search, import, export (CSV etc.) and printing.",
+            "ACCOUNT": "Creating an account, verification emails, signing in, wrong or duplicate accounts, merging accounts, account settings and limits, plans and billing.",
+            "INTEGRATIONS": "Using Q-DO from outside the app: home- or lock-screen widgets, voice assistants, calendars, location-based triggers, other apps and services.",
+            "NONE": "No product area applies, or the conversation does not concern any specific part of Q-DO."
+          }
+        },
+        {
+          "key": "platform",
+          "label": "Platform",
+          "type": "enum",
+          "description": "Platform is the Q-DO app the customer is using for the problem or request: the web app, a desktop app (Windows, macOS, Linux) or a mobile app (iOS, Android, plus Apple Watch). It is optional: pick the strongest single match, or NONE when the conversation doesn't say or no platform applies.",
+          "options": [
+            "WEB",
+            "ANDROID",
+            "IOS",
+            "DESKTOP-MACOS",
+            "DESKTOP-WINDOWS",
+            "DESKTOP-LINUX",
+            "NONE"
+          ],
+          "instructions": "On which Q-DO platform (web, mobile or desktop app) does the customer's main problem or request occur?",
+          "optionDescriptions": {
+            "WEB": "The Q-DO web app used in a browser.",
+            "ANDROID": "The Q-DO mobile app on an Android phone or tablet.",
+            "IOS": "The Q-DO mobile app on an iPhone or iPad, or on Apple Watch.",
+            "DESKTOP-MACOS": "The Q-DO desktop app on macOS.",
+            "DESKTOP-WINDOWS": "The Q-DO desktop app on Windows.",
+            "DESKTOP-LINUX": "The Q-DO desktop app on Linux.",
+            "NONE": "The conversation doesn't say which platform is involved, or no platform applies."
+          }
+        },
+        {
+          "key": "urgency",
+          "label": "Urgency",
+          "type": "enum",
+          "description": "Urgency reflects how much the customer's problem hurts them and how soon support must act, judged on the impact as the customer reports it, not lowered because support later answered or fixed it. With several problems, grade the most urgent. Feature requests are LOW. A deadline or whole team blocked moves up one level, but never to HIGH unless it fits HIGH. If the impact is unclear, MEDIUM for bugs and LOW for everything else.",
+          "options": [
+            "HIGH",
+            "MEDIUM",
+            "LOW"
+          ],
+          "instructions": "How urgently must Q-DO support act, given how much the customer's problem hurts them?",
+          "optionDescriptions": {
+            "HIGH": "Must be addressed immediately. The customer cannot use Q-DO at all, or faces loss, exposure or lockout: can't sign in or reach their account; can't create an account at all; sees another person's account or data; the app won't install, start or stay open on any device they use; a service outage or servers unreachable; tasks or lists permanently lost and not recoverable.",
+            "MEDIUM": "Should be addressed soon. Something is broken and gets in the way, but Q-DO is still usable: a bug that blocks a non-critical feature (export, print, reminders, archive view); intermittent or partial sync problems; shared-list changes slow to appear; edits that sometimes don't save; crashes limited to one device or one large list; a failing invite; a bug with a known workaround.",
+            "LOW": "Can be addressed later. Nothing important is broken: cosmetic bugs (wrong progress bar, sort display, layout glitches); feature requests; general feedback; documentation gaps or outdated help articles; how-to and advice questions; NOT_SUPPORT and NO_ISSUE messages."
+          }
+        },
+        {
+          "key": "sentiment",
+          "label": "Sentiment",
+          "type": "enum",
+          "description": "Sentiment is the customer's emotion only, ignoring the tone of support messages. Consider all customer messages but weight the most recent one most, since it shows how the customer feels now. Judge the emotion expressed, not the severity of the problem: a calm report of a serious bug is NEUTRAL. With no clear emotional signal, choose NEUTRAL.",
+          "options": [
+            "UNHAPPY",
+            "NEUTRAL",
+            "HAPPY"
+          ],
+          "instructions": "What is the customer's sentiment in this conversation, weighting their most recent message most heavily?",
+          "optionDescriptions": {
+            "UNHAPPY": "Clear frustration or disappointment: words like \"frustrating,\" \"annoying,\" \"disappointed,\" \"this is the third time\"; says the problem is blocking their work or productivity; impatient follow-ups (\"any update?\"); or a latest message saying the problem still isn't fixed, with frustration.",
+            "NEUTRAL": "Matter-of-fact. Reports a problem, asks a question or makes a request with polite but unemotional language. Routine courtesies (\"Hi,\" \"Thanks,\" \"Cheers\") alone do not make a message positive. Most first messages fall here.",
+            "HAPPY": "Positive. Expresses appreciation, satisfaction with the answer or fix, or affection for the product (\"I love Q-DO, but…\", \"That worked, thanks!\"), with little or no frustration, including when the latest message says the problem is fixed and thanks support."
+          }
+        }
+      ],
+      "rules": "# QVAL RULES — Q-DO Support Conversations\n\n## RULES\n\n### Your task\n\nYou are triaging customer support conversations for **Q-DO**.\n\nBase every decision only on the text of the conversation (subject and messages). Do not invent facts.\n\n### The product\n\nQ-DO is a collaborative to-do list app. People use it through a **web app**, **desktop apps** (Windows, macOS, Linux), and **mobile apps** (iOS, Android, plus Apple Watch). Users can:\n\n- create to-do lists and add task items (with notes, subtasks, priorities, due dates, recurring tasks and reminders)\n- check off items as complete\n- share lists with other people, who can then edit and check off items on the shared list (with roles/permissions)\n- archive completed lists, and search, export or print lists\n- sync lists across all their devices, including changes made offline\n\nCustomers are end users, mostly productivity-minded people, who are tech savvy but not developers. They write from laptops, phones and tablets. Their tone ranges from crisp and professional to frustrated when something blocks their work.\n\n### Reading a conversation\n\n- A conversation (thread) is a subject plus one or more messages in time order.\n- Messages where `isStaff` is `true` (sender email at `company.biz`) are from the Q-DO support team. All other messages are from the customer.\n- Every conversation starts with a customer message. The first customer message defines what the conversation is about.\n\n### What customers ask about\n\nBased on an audit of 100 Q-DO conversations, customers write in about these kinds of things:\n\n- **Feature requests** — ways to organize lists (folders, tags, templates, kanban, auto-archive, bulk import), more task fields (attachments, dependencies, quantities, Markdown), finer sharing controls, new ways to capture or see tasks (voice assistants, widgets, location reminders), desktop-only features, and more themes.\n- **Task and list bugs** — edits that don't stick or come out garbled, tasks deleted or added by accident, wrong due/repeat/completion dates, wrong list order or progress, and wrong reminders or notifications.\n- **Help center and how-to** — features, limits or sharing behavior that the help center doesn't explain, outdated or mistranslated help articles, and requests for advice on how to use Q-DO well.\n- **Install, launch and crashes** — unsupported devices/OS/browsers, installs that fail, apps that won't start, and crashes or freezes.\n- **Sync across devices** — checkmarks not syncing, lists that differ between devices, offline changes that never upload, and repeated sync conflict prompts.\n- **Sharing and collaboration** — other members' changes not appearing, edits that collide, failed invites, and roles or \"leave list\" not working.\n- **Signup and sign-in** — missing or expired verification emails, signup forms blocking a valid user, and wrong or duplicate accounts.\n- **Archive, search and export** — the archive showing or taking the wrong lists, archived content that can't be reached or gets reset, and incomplete exports or printouts.\n\nA conversation may also be something other than a support request (spam, sales pitch, job application, a thank-you with no ask), or too vague to classify. Categories exist for those cases.\n\n---\n\n### Labels\n\nLabels are grouped into a number of areas, each with a set number of options.\n\nAreas (with options):\n\n- Platform (WEB, ANDROID, IOS, DESKTOP-MACOS, DESKTOP-WINDOWS, DESKTOP-LINUX)\n- Issue (HOW_TO/DOCS, BUG, FEATURE_REQUEST, NOT_SUPPORT, SPAM, NO_ISSUE, UNCLEAR)\n- Product-Area (TASKS_LISTS, SHARING, ARCHIVE_SEARCH_EXPORT, SYNC, INTEGRATIONS, ACCOUNT)\n\n**ISSUE** is a mandatory field.\n**PLATFORM** and **PRODUCT-AREA** are optional.\n\nNotes on applying labels:\n\n- Each ticket should have no more than one of each selected. If more than one may apply, choose the strongest match. For example, if a customer has a problem sharing their task lists, then it's product area is `SHARING`.\n- Do not label things mentioned only in passing (e.g., \"I love the dark mode, but…\"), or things raised only by support.\n- If later messages show that the real problem is different from how it was first described, label the real problem and not the mistaken one.\n- **One problem gets one label.** Apply more than one label only for **separate** problems or requests, not to hedge between two possible labels for the same problem.\n- Two separate problems that fall under the same label (e.g., two different sync bugs) still mean that one label applies.\n- Every conversation gets at least one label.\n- The standalone labels `NOT_SUPPORT`, `NO_ISSUE` and `UNCLEAR` are used **alone**. If one of them applies, no other label applies.\n\nLabel definitions:\n\n#### Product areas\n\n| Area | Definition and examples |\n|---|---|\n| `TASKS_LISTS` | Creating and editing tasks and lists on the customer's own account: task titles, notes, subtasks, priorities, due dates, recurring tasks, completion, reminders and notifications, list order, sorting, progress, pinning, organizing lists (folders, tags, templates, views). |\n| `SYNC` | Keeping **one person's own devices** in step: changes, checkmarks or lists that differ between devices, offline changes that don't upload, sync-conflict prompts. |\n| `SHARING` | Lists shared **between different people**: invites, members, roles and permissions, leaving a list, assigning tasks, seeing other members' changes, collisions between members' edits. |\n| `ARCHIVE_SEARCH_EXPORT` | Archiving and unarchiving lists, the archive view, search, import, export (CSV etc.) and printing. |\n| `ACCOUNT` | Creating an account, verification emails, signing in, wrong or duplicate accounts, merging accounts, account settings and limits, plans and billing. |\n| `INTEGRATIONS` | Using Q-DO from outside the app: home- or lock-screen widgets, voice assistants, calendars, location-based triggers, other apps and services. |\n\nChoosing the area:\n\n- **Sync vs. sharing:** If the problem is between **one person's own devices**, use `SYNC`. If it is between **different people** on a shared list, use `SHARING`.\n\n\n#### Issue types\n\n| Type | Definition |\n|---|---|\n| `BUG` | Something that exists in Q-DO doesn't work as it should: data not saved, garbled or lost; wrong behavior; sync failures; crashes; installs or sign-ins that fail; a device that should be supported being refused. |\n| `FEATURE_REQUEST` | The customer asks for something Q-DO doesn't do, even if they phrase it as a complaint (\"why can't I…\"). Includes asking for support for a device, OS or browser Q-DO doesn't support. |\n| `HOW_TO/DOCS` | The customer looked for help and the help center, FAQ or in-app guidance is missing, unclear, wrong, outdated or mistranslated. Or the customer asks how to do something or for advice on using Q-DO, without pointing to a documentation problem and with nothing broken. |\n| `NOT_SUPPORT` | Not a Q-DO support request: job applications, press or partnership requests, sales pitches, messages meant for a different company. |\n| `SPAM` | Not for this company, or clearly trying to sell a product or service that we don't need. |\n| `NO_ISSUE` | Thank-you notes or comments that ask for nothing. |\n| `UNCLEAR` | The message is too vague, empty or garbled to tell what the problem is, even if the customer names an area (e.g., \"something's wrong with sharing\"). Use only as a last resort. |\n\nChoosing the type:\n\n- **Bug vs. feature request:** If the customer describes something that exists in Q-DO but behaves incorrectly, it is a `BUG`. If they ask for something Q-DO doesn't do, it is a `FEATURE_REQUEST`.\n- **Bug vs. documentation:** If the product works but the help is missing or wrong, use `HOW_TO/DOCS`. If the product itself misbehaves, use `BUG`, even if the customer also mentions a help article. If the help says one thing and the product does another and it isn't clear which is wrong, use `BUG`.\n- **Unsupported devices:** If the customer asks whether a device is supported, use `HOW_TO/DOCS`. If they ask Q-DO to support a device it doesn't, use `FEATURE_REQUEST`. If a device that should work is refused, use `BUG`.\n\n---\n\n### Urgency\n\nPick exactly one of the three urgency values `HIGH`, `MEDIUM` or `LOW`, choosing the one that reflects **how much the customer's problem hurts them and how soon support must act**. Judge the impact of the problem as the customer reports it. Do not lower the urgency because support later answered, worked around or fixed it in the same conversation.\n\n| Urgency | Definition and examples |\n|---|---|\n| `HIGH` | **Must be addressed immediately.** The customer cannot use Q-DO at all, or faces loss, exposure or lockout. Examples: can't sign in or reach their account; can't create an account at all; sees another person's account or data; the app won't install, start or stay open on any device they use; a service outage or servers unreachable; tasks or lists permanently lost and not recoverable. |\n| `MEDIUM` | **Should be addressed soon.** Something is broken and gets in the way, but Q-DO is still usable. Examples: a bug that blocks a non-critical feature (export, print, reminders, archive view); intermittent or partial sync problems; shared-list changes slow to appear; edits that sometimes don't save; crashes limited to one device or one large list; a failing invite; a bug with a known workaround. |\n| `LOW` | **Can be addressed later.** Nothing important is broken. Examples: cosmetic bugs (wrong progress bar, sort display, layout glitches); feature requests; general feedback; documentation gaps or outdated help articles; how-to and advice questions; `NOT_SUPPORT` and `NO_ISSUE` messages. |\n\nTie-breakers:\n\n- If the conversation has several labels, grade the urgency of the **most urgent** problem.\n- A feature request is `LOW` even if the customer says it is important to them, unless it describes something actually broken.\n- If the customer says a problem is blocking a deadline or their whole team, move up one level, but never to `HIGH` unless it fits the `HIGH` definition.\n- If you can't tell how badly the customer is affected, choose `MEDIUM` for bugs and `LOW` for everything else.\n\n---\n\n### Sentiment\n\nGrade the **customer's** sentiment only; ignore the tone of support messages. Consider all customer messages, but weight the **most recent customer message** most heavily, since it shows how the customer feels now. Judge the emotion expressed, not the severity of the problem: a calm report of a serious bug is `NEUTRAL`.\n\n| Sentiment | Definition and cues |\n|---|---|\n| `UNHAPPY` | Clear frustration or disappointment. Words like \"frustrating,\" \"annoying,\" \"disappointed,\" \"this is the third time\"; says the problem is blocking their work or productivity; impatient follow-ups (\"any update?\"). |\n| `NEUTRAL` | Matter-of-fact. Reports a problem, asks a question or makes a request with polite but unemotional language. Routine courtesies (\"Hi,\" \"Thanks,\" \"Cheers\") alone do not make a message positive. Most first messages fall here. |\n| `HAPPY` | Positive. Expresses appreciation, satisfaction with the answer or fix, or affection for the product (\"I love Q-DO, but…\", \"That worked, thanks!\"), with little or no frustration. |\n\nTie-breakers:\n\n- If the customer started frustrated but their latest message says the problem is fixed and thanks support, grade the latest mood (usually `HAPPY`).\n- If the customer started polite but their latest message reports the problem still isn't fixed and expresses frustration, grade `UNHAPPY`.\n- If there is no clear emotional signal, choose `NEUTRAL`.\n"
+    }
+  },
+  "evaluators": [
+    {
+      "id": "llm",
+      "kind": "llm",
+      "name": "LLM · jev-latest",
+      "provider": "typesafe",
+      "model": "jev-latest",
+      "results": [
+        {
+          "ticketId": 1,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:01.415Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 2,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:01.418Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 3,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "ARCHIVE_SEARCH_EXPORT",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:01.431Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 4,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:01.417Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 5,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:01.739Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 6,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "INTEGRATIONS",
+            "platform": "IOS",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:01.726Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 7,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "IOS",
+            "urgency": "HIGH",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:01.714Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 8,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "IOS",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:01.718Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 9,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ARCHIVE_SEARCH_EXPORT",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:02.018Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 10,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:01.989Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 11,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "DESKTOP-MACOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:01.992Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 12,
+          "values": {
+            "issue": "BUG",
+            "productArea": "NONE",
+            "platform": "DESKTOP-WINDOWS",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:02.044Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 13,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:02.349Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 14,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:02.242Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 15,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:02.343Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 16,
+          "values": {
+            "issue": "BUG",
+            "productArea": "NONE",
+            "platform": "DESKTOP-WINDOWS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:02.297Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 17,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "INTEGRATIONS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:02.499Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 18,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "WEB",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:02.725Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 19,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "INTEGRATIONS",
+            "platform": "IOS",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:02.647Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 20,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "DESKTOP-MACOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:02.605Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 21,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "WEB",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:02.753Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 22,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "IOS",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:02.919Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 23,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "NONE",
+            "platform": "IOS",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:02.936Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 24,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ARCHIVE_SEARCH_EXPORT",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:03.037Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 25,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ACCOUNT",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:03.004Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 26,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "DESKTOP-WINDOWS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:03.235Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 27,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "NONE",
+            "platform": "DESKTOP-MACOS",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:03.261Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 28,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:03.284Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 29,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:03.383Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 30,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:03.553Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 31,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:03.548Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 32,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:03.574Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 33,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:03.690Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 34,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SYNC",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:03.834Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 35,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ARCHIVE_SEARCH_EXPORT",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:03.837Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 36,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "INTEGRATIONS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:03.839Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 37,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:03.982Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 38,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "NONE",
+            "platform": "DESKTOP-WINDOWS",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:04.101Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 39,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:04.116Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 40,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:04.100Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 41,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "ARCHIVE_SEARCH_EXPORT",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:04.242Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 42,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "ANDROID",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:04.369Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 43,
+          "values": {
+            "issue": "BUG",
+            "productArea": "NONE",
+            "platform": "ANDROID",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:04.375Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 44,
+          "values": {
+            "issue": "BUG",
+            "productArea": "NONE",
+            "platform": "DESKTOP-MACOS",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:04.397Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 45,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:04.537Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 46,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "IOS",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:04.657Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 47,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "SYNC",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:04.656Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 48,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:04.657Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 49,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "IOS",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:04.824Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 50,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:04.940Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 51,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:04.952Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 52,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:04.939Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 53,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:05.095Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 54,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:05.230Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 55,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:05.232Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 56,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:05.247Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 57,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ARCHIVE_SEARCH_EXPORT",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:05.371Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 58,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:05.514Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 59,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SYNC",
+            "platform": "DESKTOP-MACOS",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:05.536Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 60,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ARCHIVE_SEARCH_EXPORT",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:05.594Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 61,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "NONE",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:05.650Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 62,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "INTEGRATIONS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:05.787Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 63,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "DESKTOP-WINDOWS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:05.833Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 64,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "HAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:05.864Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 65,
+          "values": {
+            "issue": "BUG",
+            "productArea": "NONE",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:05.980Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 66,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "DESKTOP-WINDOWS",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:06.075Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 67,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:06.303Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 68,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "HAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:06.193Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 69,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "NONE",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:06.282Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 70,
+          "values": {
+            "issue": "BUG",
+            "productArea": "NONE",
+            "platform": "ANDROID",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:06.359Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 71,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "NONE",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:06.461Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 72,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:06.541Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 73,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "NONE",
+            "platform": "DESKTOP-MACOS",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:06.578Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 74,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ARCHIVE_SEARCH_EXPORT",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:06.631Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 75,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:06.736Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 76,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "DESKTOP-WINDOWS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:06.846Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 77,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:06.848Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 78,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:06.914Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 79,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "SYNC",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:06.999Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 80,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "NONE",
+            "platform": "DESKTOP-MACOS",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:07.153Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 81,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "SYNC",
+            "platform": "IOS",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:07.137Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 82,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:07.192Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 83,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SYNC",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:07.254Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 84,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "SHARING",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "HAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:07.430Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 85,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:07.695Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 86,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "NONE",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:07.455Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 87,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:07.533Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 88,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:07.696Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 89,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "INTEGRATIONS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:07.726Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 90,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "WEB",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:07.801Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 91,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:07.958Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 92,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ACCOUNT",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:07.989Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 93,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:07.999Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 94,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SYNC",
+            "platform": "NONE",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:08.074Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 95,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:08.219Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 96,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:08.276Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 97,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:08.287Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 98,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ACCOUNT",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:08.350Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 99,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ACCOUNT",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:08.494Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 100,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "IOS",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:08.554Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 101,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:08.580Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 102,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ACCOUNT",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:08.626Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 103,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:08.812Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 104,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:08.869Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 105,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:08.844Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 106,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:08.899Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 107,
+          "values": {
+            "issue": "BUG",
+            "productArea": "NONE",
+            "platform": "DESKTOP-WINDOWS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:09.069Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 108,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SYNC",
+            "platform": "DESKTOP-MACOS",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:09.108Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 109,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:09.136Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 110,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "HAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:09.343Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 111,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:09.373Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 112,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "ANDROID",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:09.379Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 113,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ACCOUNT",
+            "platform": "ANDROID",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:09.424Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 114,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "INTEGRATIONS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:09.664Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 115,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:09.714Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 116,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:09.665Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 117,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ACCOUNT",
+            "platform": "IOS",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:09.700Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 118,
+          "values": {
+            "issue": "BUG",
+            "productArea": "INTEGRATIONS",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:09.916Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 119,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ACCOUNT",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:09.950Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 120,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:09.989Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 121,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "DESKTOP-MACOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:09.977Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 122,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "SYNC",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:10.184Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 123,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "NONE",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:10.209Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 124,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:10.264Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 125,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "ANDROID",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:10.285Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 126,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "DESKTOP-MACOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:10.440Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 127,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:10.473Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 128,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "HAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:10.576Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 129,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "INTEGRATIONS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:10.581Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 130,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "INTEGRATIONS",
+            "platform": "ANDROID",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:10.717Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 131,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:10.749Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 132,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:10.865Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 133,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "INTEGRATIONS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:10.919Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 134,
+          "values": {
+            "issue": "BUG",
+            "productArea": "NONE",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:11.000Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 135,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "IOS",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:11.022Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 136,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:11.143Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 137,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ACCOUNT",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "HAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:11.192Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 138,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:11.272Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 139,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:11.292Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 140,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:11.406Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 141,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ACCOUNT",
+            "platform": "DESKTOP-WINDOWS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:11.555Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 142,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:11.566Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 143,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:11.576Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 144,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:11.700Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 145,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "LOW",
+            "sentiment": "HAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:11.824Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 146,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:11.835Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 147,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SYNC",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:11.851Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 148,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:12.004Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 149,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "SYNC",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "HAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:12.098Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 150,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ARCHIVE_SEARCH_EXPORT",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "HAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:12.104Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 151,
+          "values": {
+            "issue": "BUG",
+            "productArea": "NONE",
+            "platform": "DESKTOP-WINDOWS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:12.123Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 152,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "HAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:12.266Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 153,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "IOS",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:12.356Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 154,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:12.409Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 155,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:12.390Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 156,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:12.527Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 157,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:12.625Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 158,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "INTEGRATIONS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:12.660Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 159,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:12.695Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 160,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:12.823Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 161,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "WEB",
+            "urgency": "LOW",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:12.889Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 162,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ARCHIVE_SEARCH_EXPORT",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:12.945Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 163,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "INTEGRATIONS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:12.951Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 164,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:13.090Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 165,
+          "values": {
+            "issue": "BUG",
+            "productArea": "NONE",
+            "platform": "ANDROID",
+            "urgency": "HIGH",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:13.168Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 166,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:13.196Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 167,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:13.215Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 168,
+          "values": {
+            "issue": "BUG",
+            "productArea": "NONE",
+            "platform": "DESKTOP-WINDOWS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:13.366Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 169,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:13.432Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 170,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "SYNC",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:13.473Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 171,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:13.480Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 172,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "DESKTOP-WINDOWS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:13.645Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 173,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:13.716Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 174,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:13.764Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 175,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:13.765Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 176,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "LOW",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:13.975Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 177,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:14.029Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 178,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:14.064Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 179,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:14.085Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 180,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "INTEGRATIONS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:14.270Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 181,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:14.342Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 182,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "INTEGRATIONS",
+            "platform": "IOS",
+            "urgency": "LOW",
+            "sentiment": "HAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:14.363Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 183,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "WEB",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:14.388Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 184,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:14.531Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 185,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:14.628Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 186,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SYNC",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:14.696Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 187,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ARCHIVE_SEARCH_EXPORT",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:14.679Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 188,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "HAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:14.923Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 189,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:14.888Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 190,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ACCOUNT",
+            "platform": "IOS",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:14.927Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 191,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:14.977Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 192,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:15.175Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 193,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:15.226Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 194,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:15.197Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 195,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "NONE",
+            "platform": "ANDROID",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:15.280Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 196,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:15.436Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 197,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "NONE",
+            "platform": "DESKTOP-LINUX",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:15.478Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 198,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:15.538Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 199,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:15.547Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 200,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "NONE",
+            "platform": "WEB",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:15.738Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 201,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:15.737Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 202,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:15.783Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 203,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SYNC",
+            "platform": "DESKTOP-MACOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:15.828Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 204,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:15.997Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 205,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:16.021Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 206,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:16.047Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 207,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:16.103Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 208,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:16.267Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 209,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ARCHIVE_SEARCH_EXPORT",
+            "platform": "DESKTOP-WINDOWS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:16.292Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 210,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "NONE",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:16.328Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 211,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "NONE",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:16.387Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 212,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:16.573Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 213,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SYNC",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:16.574Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 214,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "IOS",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:16.602Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 215,
+          "values": {
+            "issue": "BUG",
+            "productArea": "INTEGRATIONS",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:16.679Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 216,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "NONE",
+            "platform": "ANDROID",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:16.832Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 217,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:16.835Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 218,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:16.846Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 219,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:16.971Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 220,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:17.089Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 221,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:17.122Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 222,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:17.152Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 223,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ARCHIVE_SEARCH_EXPORT",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:17.236Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 224,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "DESKTOP-WINDOWS",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:17.348Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 225,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "HAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:17.431Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 226,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ARCHIVE_SEARCH_EXPORT",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:17.457Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 227,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:17.522Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 228,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:17.620Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 229,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:17.711Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 230,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:17.747Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 231,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:17.788Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 232,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:17.909Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 233,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:17.968Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 234,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:18.045Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 235,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:18.048Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 236,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:18.200Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 237,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "IOS",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:18.241Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 238,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:18.311Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 239,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:18.303Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 240,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ARCHIVE_SEARCH_EXPORT",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:18.463Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 241,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:18.501Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 242,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:18.552Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 243,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:18.566Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 244,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "IOS",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:18.739Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 245,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "WEB",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:18.776Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 246,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "IOS",
+            "urgency": "HIGH",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:18.820Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 247,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "INTEGRATIONS",
+            "platform": "WEB",
+            "urgency": "LOW",
+            "sentiment": "HAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:18.839Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 248,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "DESKTOP-WINDOWS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:19.001Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 249,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "NONE",
+            "platform": "IOS",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:42:19.052Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        },
+        {
+          "ticketId": 250,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "LOW",
+            "sentiment": "HAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:42:19.095Z",
+          "error": null,
+          "reportedModel": "jev-1.13.0"
+        }
+      ]
+    },
+    {
+      "id": "human",
+      "kind": "human",
+      "name": "brianlevine",
+      "results": [
+        {
+          "ticketId": 1,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T20:43:53.139Z"
+        },
+        {
+          "ticketId": 2,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T20:44:04.777Z"
+        },
+        {
+          "ticketId": 3,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "ARCHIVE_SEARCH_EXPORT",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T20:49:32.650Z"
+        },
+        {
+          "ticketId": 4,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T20:50:09.686Z"
+        },
+        {
+          "ticketId": 5,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T20:50:39.478Z"
+        },
+        {
+          "ticketId": 6,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "INTEGRATIONS",
+            "platform": "IOS",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:48:09.157Z"
+        },
+        {
+          "ticketId": 7,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "IOS",
+            "urgency": "HIGH",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T20:52:41.654Z"
+        },
+        {
+          "ticketId": 8,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ACCOUNT",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T20:53:28.483Z"
+        },
+        {
+          "ticketId": 9,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ARCHIVE_SEARCH_EXPORT",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T20:56:25.950Z"
+        },
+        {
+          "ticketId": 10,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T20:57:09.870Z"
+        },
+        {
+          "ticketId": 11,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "DESKTOP-MACOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T20:57:45.118Z"
+        },
+        {
+          "ticketId": 12,
+          "values": {
+            "issue": "BUG",
+            "productArea": "NONE",
+            "platform": "DESKTOP-WINDOWS",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T20:58:20.301Z"
+        },
+        {
+          "ticketId": 13,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T20:58:57.544Z"
+        },
+        {
+          "ticketId": 14,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T20:59:29.673Z"
+        },
+        {
+          "ticketId": 15,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:12:51.434Z"
+        },
+        {
+          "ticketId": 16,
+          "values": {
+            "issue": "BUG",
+            "productArea": "NONE",
+            "platform": "DESKTOP-WINDOWS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:14:27.136Z"
+        },
+        {
+          "ticketId": 17,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "INTEGRATIONS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:49:38.394Z"
+        },
+        {
+          "ticketId": 18,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ACCOUNT",
+            "platform": "NONE",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:16:25.323Z"
+        },
+        {
+          "ticketId": 19,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "INTEGRATIONS",
+            "platform": "IOS",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:49:10.973Z"
+        },
+        {
+          "ticketId": 20,
+          "values": {
+            "issue": "BUG",
+            "productArea": "NONE",
+            "platform": "DESKTOP-MACOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:17:23.211Z"
+        },
+        {
+          "ticketId": 21,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:17:49.788Z"
+        },
+        {
+          "ticketId": 22,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "IOS",
+            "urgency": "HIGH",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:18:18.142Z"
+        },
+        {
+          "ticketId": 23,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "NONE",
+            "platform": "IOS",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:51:11.331Z"
+        },
+        {
+          "ticketId": 24,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:21:25.015Z"
+        },
+        {
+          "ticketId": 25,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ACCOUNT",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:21:43.764Z"
+        },
+        {
+          "ticketId": 26,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:22:22.657Z"
+        },
+        {
+          "ticketId": 27,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "NONE",
+            "platform": "DESKTOP-MACOS",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:22:47.379Z"
+        },
+        {
+          "ticketId": 28,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:23:26.467Z"
+        },
+        {
+          "ticketId": 29,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:51:48.907Z"
+        },
+        {
+          "ticketId": 30,
+          "values": {
+            "issue": "BUG",
+            "productArea": "NONE",
+            "platform": "ANDROID",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:52:51.545Z"
+        },
+        {
+          "ticketId": 31,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T21:34:14.764Z"
+        },
+        {
+          "ticketId": 32,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:36:17.304Z"
+        },
+        {
+          "ticketId": 33,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T21:36:55.266Z"
+        },
+        {
+          "ticketId": 34,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SYNC",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 35,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 36,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "INTEGRATIONS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 37,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 38,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "NONE",
+            "platform": "DESKTOP-WINDOWS",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 39,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 40,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "IOS",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 41,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "ARCHIVE_SEARCH_EXPORT",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "HAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 42,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "ANDROID",
+            "urgency": "HIGH",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 43,
+          "values": {
+            "issue": "BUG",
+            "productArea": "NONE",
+            "platform": "ANDROID",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 44,
+          "values": {
+            "issue": "BUG",
+            "productArea": "NONE",
+            "platform": "DESKTOP-MACOS",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 45,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 46,
+          "values": {
+            "issue": "BUG",
+            "productArea": "NONE",
+            "platform": "IOS",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 47,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "SYNC",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 48,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 49,
+          "values": {
+            "issue": "BUG",
+            "productArea": "NONE",
+            "platform": "IOS",
+            "urgency": "LOW",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 50,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 51,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 52,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "NONE",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 53,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 54,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 55,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 56,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 57,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ACCOUNT",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 58,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 59,
+          "values": {
+            "issue": "BUG",
+            "productArea": "NONE",
+            "platform": "DESKTOP-MACOS",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 60,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ARCHIVE_SEARCH_EXPORT",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 61,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "NONE",
+            "platform": "ANDROID",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 62,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "INTEGRATIONS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 63,
+          "values": {
+            "issue": "BUG",
+            "productArea": "NONE",
+            "platform": "DESKTOP-WINDOWS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 64,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "NONE",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "HAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 65,
+          "values": {
+            "issue": "BUG",
+            "productArea": "NONE",
+            "platform": "IOS",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 66,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "DESKTOP-WINDOWS",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 67,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 68,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "HAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 69,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "NONE",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 70,
+          "values": {
+            "issue": "BUG",
+            "productArea": "NONE",
+            "platform": "ANDROID",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 71,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "NONE",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 72,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 73,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "NONE",
+            "platform": "DESKTOP-MACOS",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 74,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ARCHIVE_SEARCH_EXPORT",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 75,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 76,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "DESKTOP-WINDOWS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 77,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 78,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 79,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "SYNC",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 80,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "NONE",
+            "platform": "DESKTOP-MACOS",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 81,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "SYNC",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 82,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 83,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SYNC",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 84,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "SHARING",
+            "platform": "ANDROID",
+            "urgency": "LOW",
+            "sentiment": "HAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 85,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 86,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ACCOUNT",
+            "platform": "NONE",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 87,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 88,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 89,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "INTEGRATIONS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 90,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "WEB",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 91,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 92,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ACCOUNT",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 93,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 94,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SYNC",
+            "platform": "NONE",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 95,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 96,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 97,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 98,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ACCOUNT",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 99,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ACCOUNT",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 100,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "IOS",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 101,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 102,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ACCOUNT",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 103,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 104,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 105,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-08T00:19:08.164Z"
+        },
+        {
+          "ticketId": 106,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 107,
+          "values": {
+            "issue": "BUG",
+            "productArea": "NONE",
+            "platform": "DESKTOP-WINDOWS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 108,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SYNC",
+            "platform": "DESKTOP-MACOS",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 109,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 110,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "NONE",
+            "urgency": "MEDIUM",
+            "sentiment": "HAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 111,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 112,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "ANDROID",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 113,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ACCOUNT",
+            "platform": "ANDROID",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 114,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "INTEGRATIONS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 115,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "NONE",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 116,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 117,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "NONE",
+            "platform": "IOS",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 118,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 119,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ACCOUNT",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 120,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 121,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "DESKTOP-MACOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 122,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "SYNC",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 123,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "NONE",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 124,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 125,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "ANDROID",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 126,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "DESKTOP-MACOS",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-08T00:18:07.407Z"
+        },
+        {
+          "ticketId": 127,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 128,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "HAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 129,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "INTEGRATIONS",
+            "platform": "ANDROID",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-08T00:16:54.147Z"
+        },
+        {
+          "ticketId": 130,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "INTEGRATIONS",
+            "platform": "ANDROID",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 131,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 132,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 133,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "INTEGRATIONS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 134,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "NONE",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 135,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "NONE",
+            "platform": "IOS",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 136,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 137,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ACCOUNT",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "HAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 138,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 139,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 140,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 141,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ACCOUNT",
+            "platform": "NONE",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 142,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 143,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 144,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 145,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "NONE",
+            "platform": "ANDROID",
+            "urgency": "LOW",
+            "sentiment": "HAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 146,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 147,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SYNC",
+            "platform": "NONE",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 148,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 149,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "NONE",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "HAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 150,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ARCHIVE_SEARCH_EXPORT",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "HAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 151,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "NONE",
+            "platform": "DESKTOP-WINDOWS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 152,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 153,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "IOS",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 154,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 155,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 156,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ACCOUNT",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 157,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 158,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "INTEGRATIONS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 159,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 160,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 161,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-08T00:15:48.139Z"
+        },
+        {
+          "ticketId": 162,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ARCHIVE_SEARCH_EXPORT",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 163,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "INTEGRATIONS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 164,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 165,
+          "values": {
+            "issue": "BUG",
+            "productArea": "NONE",
+            "platform": "ANDROID",
+            "urgency": "HIGH",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 166,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 167,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 168,
+          "values": {
+            "issue": "BUG",
+            "productArea": "NONE",
+            "platform": "DESKTOP-WINDOWS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 169,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "HIGH",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 170,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "SYNC",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 171,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 172,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "DESKTOP-WINDOWS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 173,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 174,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 175,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 176,
+          "values": {
+            "issue": "BUG",
+            "productArea": "NONE",
+            "platform": "ANDROID",
+            "urgency": "LOW",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 177,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 178,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 179,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 180,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "INTEGRATIONS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 181,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 182,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "INTEGRATIONS",
+            "platform": "IOS",
+            "urgency": "LOW",
+            "sentiment": "HAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 183,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 184,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 185,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 186,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SYNC",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 187,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ARCHIVE_SEARCH_EXPORT",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 188,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "HAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 189,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 190,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ACCOUNT",
+            "platform": "IOS",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 191,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "INTEGRATIONS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 192,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 193,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 194,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 195,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "NONE",
+            "platform": "ANDROID",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 196,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 197,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "NONE",
+            "platform": "DESKTOP-LINUX",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 198,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 199,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 200,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "NONE",
+            "platform": "WEB",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 201,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 202,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 203,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SYNC",
+            "platform": "DESKTOP-MACOS",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 204,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 205,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 206,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 207,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 208,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 209,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ARCHIVE_SEARCH_EXPORT",
+            "platform": "DESKTOP-WINDOWS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 210,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "NONE",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 211,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ACCOUNT",
+            "platform": "NONE",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 212,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 213,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SYNC",
+            "platform": "IOS",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 214,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 215,
+          "values": {
+            "issue": "BUG",
+            "productArea": "INTEGRATIONS",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 216,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "NONE",
+            "platform": "ANDROID",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 217,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 218,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 219,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 220,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 221,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 222,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "NONE",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 223,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ARCHIVE_SEARCH_EXPORT",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 224,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "ACCOUNT",
+            "platform": "NONE",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 225,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "NONE",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "HAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 226,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ARCHIVE_SEARCH_EXPORT",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 227,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 228,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 229,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 230,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 231,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 232,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "NONE",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 233,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 234,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 235,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 236,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 237,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "IOS",
+            "urgency": "HIGH",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 238,
+          "values": {
+            "issue": "BUG",
+            "productArea": "SHARING",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 239,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "SHARING",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 240,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ARCHIVE_SEARCH_EXPORT",
+            "platform": "WEB",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 241,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 242,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 243,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "IOS",
+            "urgency": "MEDIUM",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 244,
+          "values": {
+            "issue": "BUG",
+            "productArea": "NONE",
+            "platform": "IOS",
+            "urgency": "HIGH",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 245,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "TASKS_LISTS",
+            "platform": "NONE",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 246,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "IOS",
+            "urgency": "HIGH",
+            "sentiment": "UNHAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 247,
+          "values": {
+            "issue": "HOW_TO/DOCS",
+            "productArea": "NONE",
+            "platform": "NONE",
+            "urgency": "HIGH",
+            "sentiment": "HAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 248,
+          "values": {
+            "issue": "BUG",
+            "productArea": "ACCOUNT",
+            "platform": "DESKTOP-WINDOWS",
+            "urgency": "MEDIUM",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 249,
+          "values": {
+            "issue": "FEATURE_REQUEST",
+            "productArea": "NONE",
+            "platform": "IOS",
+            "urgency": "LOW",
+            "sentiment": "NEUTRAL"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        },
+        {
+          "ticketId": 250,
+          "values": {
+            "issue": "BUG",
+            "productArea": "TASKS_LISTS",
+            "platform": "ANDROID",
+            "urgency": "LOW",
+            "sentiment": "HAPPY"
+          },
+          "evaluatedAt": "2026-10-06T22:02:28.441Z"
+        }
+      ]
+    }
+  ]
+}

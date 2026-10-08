@@ -1,0 +1,114 @@
+{
+  "scorer": "jev",
+  "properties": [
+    {
+      "key": "issue",
+      "label": "Issue",
+      "type": "enum",
+      "description": "Issue is the kind of problem or request the customer raises. It is mandatory: pick the single strongest match. NOT_SUPPORT, NO_ISSUE and UNCLEAR are used only when nothing else applies.",
+      "options": [
+        "BUG",
+        "FEATURE_REQUEST",
+        "HOW_TO/DOCS",
+        "NOT_SUPPORT",
+        "SPAM",
+        "NO_ISSUE",
+        "UNCLEAR"
+      ],
+      "instructions": "Which issue type best describes the main problem or request the customer raises in this Q-DO support conversation?",
+      "optionDescriptions": {
+        "BUG": "Something that exists in Q-DO doesn't work as it should: data not saved, garbled or lost; wrong behavior; sync failures; crashes; installs or sign-ins that fail; a device that should be supported being refused. Also when the help says one thing and the product does another and it isn't clear which is wrong.",
+        "FEATURE_REQUEST": "The customer asks for something Q-DO doesn't do, even if they phrase it as a complaint (\"why can't I…\"). Includes asking Q-DO to support a device, OS or browser it doesn't support.",
+        "HOW_TO/DOCS": "The customer looked for help and the help center, FAQ or in-app guidance is missing, unclear, wrong, outdated or mistranslated, while the product itself works. Or the customer asks how to do something, asks whether a device is supported, or asks for advice on using Q-DO, with nothing broken.",
+        "NOT_SUPPORT": "Not a Q-DO support request: job applications, press or partnership requests, sales pitches, messages meant for a different company.",
+        "SPAM": "Not for this company, or clearly trying to sell a product or service that we don't need.",
+        "NO_ISSUE": "Thank-you notes or comments that ask for nothing.",
+        "UNCLEAR": "The message is too vague, empty or garbled to tell what the problem is, even if the customer names an area (e.g., \"something's wrong with sharing\"). Last resort only."
+      }
+    },
+    {
+      "key": "productArea",
+      "label": "Product-Area",
+      "type": "enum",
+      "description": "Product area is the part of Q-DO the customer's problem or request is about. It is optional: pick the strongest single match, or NONE when no area applies (for example NOT_SUPPORT, NO_ISSUE or UNCLEAR conversations). Problems between one person's own devices are SYNC; problems between different people on a shared list are SHARING.",
+      "options": [
+        "TASKS_LISTS",
+        "SYNC",
+        "SHARING",
+        "ARCHIVE_SEARCH_EXPORT",
+        "ACCOUNT",
+        "INTEGRATIONS",
+        "NONE"
+      ],
+      "instructions": "Which Q-DO product area does the customer's main problem or request concern?",
+      "optionDescriptions": {
+        "TASKS_LISTS": "Creating and editing tasks and lists on the customer's own account: task titles, notes, subtasks, priorities, due dates, recurring tasks, completion, reminders and notifications, list order, sorting, progress, pinning, organizing lists (folders, tags, templates, views).",
+        "SYNC": "Keeping one person's own devices in step: changes, checkmarks or lists that differ between devices, offline changes that don't upload, sync-conflict prompts.",
+        "SHARING": "Lists shared between different people: invites, members, roles and permissions, leaving a list, assigning tasks, seeing other members' changes, collisions between members' edits.",
+        "ARCHIVE_SEARCH_EXPORT": "Archiving and unarchiving lists, the archive view, search, import, export (CSV etc.) and printing.",
+        "ACCOUNT": "Creating an account, verification emails, signing in, wrong or duplicate accounts, merging accounts, account settings and limits, plans and billing.",
+        "INTEGRATIONS": "Using Q-DO from outside the app: home- or lock-screen widgets, voice assistants, calendars, location-based triggers, other apps and services.",
+        "NONE": "No product area applies, or the conversation does not concern any specific part of Q-DO."
+      }
+    },
+    {
+      "key": "platform",
+      "label": "Platform",
+      "type": "enum",
+      "description": "Platform is the Q-DO app the customer is using for the problem or request: the web app, a desktop app (Windows, macOS, Linux) or a mobile app (iOS, Android, plus Apple Watch). It is optional: pick the strongest single match, or NONE when the conversation doesn't say or no platform applies.",
+      "options": [
+        "WEB",
+        "ANDROID",
+        "IOS",
+        "DESKTOP-MACOS",
+        "DESKTOP-WINDOWS",
+        "DESKTOP-LINUX",
+        "NONE"
+      ],
+      "instructions": "On which Q-DO platform (web, mobile or desktop app) does the customer's main problem or request occur?",
+      "optionDescriptions": {
+        "WEB": "The Q-DO web app used in a browser.",
+        "ANDROID": "The Q-DO mobile app on an Android phone or tablet.",
+        "IOS": "The Q-DO mobile app on an iPhone or iPad, or on Apple Watch.",
+        "DESKTOP-MACOS": "The Q-DO desktop app on macOS.",
+        "DESKTOP-WINDOWS": "The Q-DO desktop app on Windows.",
+        "DESKTOP-LINUX": "The Q-DO desktop app on Linux.",
+        "NONE": "The conversation doesn't say which platform is involved, or no platform applies."
+      }
+    },
+    {
+      "key": "urgency",
+      "label": "Urgency",
+      "type": "enum",
+      "description": "Urgency reflects how much the customer's problem hurts them and how soon support must act, judged on the impact as the customer reports it, not lowered because support later answered or fixed it. With several problems, grade the most urgent. Feature requests are LOW. A deadline or whole team blocked moves up one level, but never to HIGH unless it fits HIGH. If the impact is unclear, MEDIUM for bugs and LOW for everything else.",
+      "options": [
+        "HIGH",
+        "MEDIUM",
+        "LOW"
+      ],
+      "instructions": "How urgently must Q-DO support act, given how much the customer's problem hurts them?",
+      "optionDescriptions": {
+        "HIGH": "Must be addressed immediately. The customer cannot use Q-DO at all, or faces loss, exposure or lockout: can't sign in or reach their account; can't create an account at all; sees another person's account or data; the app won't install, start or stay open on any device they use; a service outage or servers unreachable; tasks or lists permanently lost and not recoverable.",
+        "MEDIUM": "Should be addressed soon. Something is broken and gets in the way, but Q-DO is still usable: a bug that blocks a non-critical feature (export, print, reminders, archive view); intermittent or partial sync problems; shared-list changes slow to appear; edits that sometimes don't save; crashes limited to one device or one large list; a failing invite; a bug with a known workaround.",
+        "LOW": "Can be addressed later. Nothing important is broken: cosmetic bugs (wrong progress bar, sort display, layout glitches); feature requests; general feedback; documentation gaps or outdated help articles; how-to and advice questions; NOT_SUPPORT and NO_ISSUE messages."
+      }
+    },
+    {
+      "key": "sentiment",
+      "label": "Sentiment",
+      "type": "enum",
+      "description": "Sentiment is the customer's emotion only, ignoring the tone of support messages. Consider all customer messages but weight the most recent one most, since it shows how the customer feels now. Judge the emotion expressed, not the severity of the problem: a calm report of a serious bug is NEUTRAL. With no clear emotional signal, choose NEUTRAL.",
+      "options": [
+        "UNHAPPY",
+        "NEUTRAL",
+        "HAPPY"
+      ],
+      "instructions": "What is the customer's sentiment in this conversation, weighting their most recent message most heavily?",
+      "optionDescriptions": {
+        "UNHAPPY": "Clear frustration or disappointment: words like \"frustrating,\" \"annoying,\" \"disappointed,\" \"this is the third time\"; says the problem is blocking their work or productivity; impatient follow-ups (\"any update?\"); or a latest message saying the problem still isn't fixed, with frustration.",
+        "NEUTRAL": "Matter-of-fact. Reports a problem, asks a question or makes a request with polite but unemotional language. Routine courtesies (\"Hi,\" \"Thanks,\" \"Cheers\") alone do not make a message positive. Most first messages fall here.",
+        "HAPPY": "Positive. Expresses appreciation, satisfaction with the answer or fix, or affection for the product (\"I love Q-DO, but…\", \"That worked, thanks!\"), with little or no frustration, including when the latest message says the problem is fixed and thanks support."
+      }
+    }
+  ]
+}
