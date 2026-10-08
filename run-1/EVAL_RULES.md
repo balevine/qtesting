@@ -1,4 +1,4 @@
-# QBENCH RULES — Q-DO Support Conversations
+# QVAL RULES — Q-DO Support Conversations
 
 ## RULES
 
